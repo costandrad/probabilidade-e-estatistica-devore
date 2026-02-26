@@ -121,13 +121,13 @@
             #image("assets/images/icone.svg", height: 3cm)
           ],
           align(horizon+center)[
-            #text(fill: primary-color, size: 20pt, weight: "bold")[#book.title]\
+            #text(fill: primary-color, size: 16pt, weight: "bold")[#book.title]\
             
             #text(fill: black, weight: "light")[#book_authors]\
 
             #text(weight: "bold")[Resoluções por]\
 
-            #text(fill: akared, size: 15pt, weight: "bold")[#author]\
+            #text(fill: akared, size: 13pt, weight: "bold")[#author]\
           ],
           align(horizon+right)[
             //#image("assets/images/icone.svg", height: 3cm)
