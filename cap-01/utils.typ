@@ -1,3 +1,7 @@
+#import "@preview/cetz:0.4.2"
+#import "@preview/cetz-plot:0.1.3"
+#import "@preview/lilaq:0.5.0" as lq
+
 // Aplica o método de Briot–Ruffini (divisão sintética)
 // dividend: coeficientes do polinômio (ordem decrescente)
 // r: raiz candidata
@@ -118,4 +122,119 @@
 
   // 9) Retorna parte inteira com pontos + vírgula + parte decimal
   #return str_parte_inteira + "," + parte_decimal
+]
+
+    #let caules_e_folhas(
+      dados,
+      multiplicador: 10,
+      separador: 10,
+      escala: false,
+    ) = {
+
+      // 1️⃣ Ordena e aplica escala
+      let dados = dados
+        .map(x => x * multiplicador)
+        .sorted()
+
+      // 2️⃣ Estrutura: ((caule, (folhas)), ...)
+      let grupos = ()
+
+      for dado in dados {
+        let caule = calc.trunc(dado / separador)
+        let folha = calc.trunc(calc.rem(dado, separador))
+
+        // procura se o caule já existe
+        let indice = none
+        for i in range(grupos.len()) {
+          if grupos.at(i).at(0) == caule {
+            indice = i
+          }
+        }
+
+        if indice == none {
+          // cria novo grupo
+          grupos.push((caule, (folha,)))
+        } else {
+          // adiciona ao grupo existente
+          grupos.at(indice).at(1).push(folha)
+        }
+      }
+
+      // 3️⃣ Monta estrutura de exibição
+      let display = ()
+
+      for grupo in grupos {
+        let caule = grupo.at(0)
+        let folhas = grupo.at(1)
+
+        if escala {
+          let limite = separador / 2
+          let folhas_baixo = folhas.filter(x => x < limite)
+          let folhas_cima  = folhas.filter(x => x >= limite)
+
+          display.push((str(caule) + "L", folhas_baixo))
+          display.push((str(caule) + "H", folhas_cima))
+        } else {
+          display.push((str(caule), folhas))
+        }
+      }
+
+      display
+    }
+
+
+
+      
+
+#let caules_e_folhas_diagrama(
+  dados,
+  caules_desc: "",
+  folhas_desc: "",
+) = [
+
+  #align(center)[
+    #cetz.canvas({
+
+      import cetz.draw: *
+
+      // 🔹 Configurações de layout
+      let espacamento = 3/4
+      let n = dados.len()
+      let altura_total = espacamento * n
+
+      // 🔹 Linha vertical principal
+      line((0, 0.5), (0, -altura_total))
+
+      // 🔹 Títulos
+      content((-0.5, 1), [*Caule*], anchor: "east")
+      content((0.5, 1), [*Folhas*], anchor: "west")
+
+      // 🔹 Linhas do diagrama
+      for i in range(n) {
+        let y = -espacamento * i
+        let caule = dados.at(i).at(0)
+        let folhas = dados.at(i).at(1)
+
+        content((-0.5, y), [#caule], anchor: "east")
+        content(
+          (0.5, y),
+          [#folhas.map(str).join(" ")],
+          anchor: "west"
+        )
+      }
+
+      // 🔹 Legenda / escala
+      let y_legenda = -altura_total - 0.5
+
+      if caules_desc != "" {
+        content((0, y_legenda), [*Caule*: #caules_desc])
+      }
+
+      if folhas_desc != "" {
+        content((0, y_legenda - 0.5), [*Folhas*: #folhas_desc])
+      }
+
+    })
+  ]
+
 ]

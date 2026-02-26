@@ -37,6 +37,73 @@
 
 #v(1cm)
 
+*Exercícios* | Seção 1.2 (10-32)
+
+#set enum(start: 10)
++ Considere os dados de resistência de vigas fornecidos no Exemplo 1.2.
+
+  #set enum(numbering: "a.", start: 1)
+  + Construa um diagrama de caule e folha dos dados. O que parece ser um valor de resistência representativo? As observações parecem estar concentradas ao redor do valor representativo ou dispersas?
+    #solution([
+      #let resistencias = (
+        5.9, 7.2, 7.3, 6.3, 8.1, 6.8, 7.0, 7.6, 6.8, 6.5, 7.0, 6.3, 7.9, 9.0,
+        8.2, 8.7, 7.8, 9.7, 7.4, 7.7, 9.7, 7.8, 7.7, 11.6, 11.3, 11.8, 10.7
+      )
+
+      Os dados re resistência à flexão de vigas (em megapascal, MPa) são mostrados abaixo:
+
+      #set table(stroke: none)
+
+      #align(center, table(
+        columns: 10,
+        align: right,
+        ..resistencias.map(x => fmt(x))
+      ))
+
+      Podemos organizar os dados em um diagrama de caules e folhas tal que oa o caule corresponda à parte inteira dos dados, enquanto que  as folhas correspondam ao primeiro dígito após a vírgula. O resultado é mostrado a seguir:
+
+
+
+      #let dados = caules_e_folhas(resistencias, escala: false)
+
+      #caules_e_folhas_diagrama(dados, caules_desc: "Parte inteira", folhas_desc: "Primeiro decimal")
+
+      Observa-se maior concentração entre 6,0 e 8,0, especialmente do caule 7 que reúne a maior frequência de valores. Há poucos valores acima de 10, o que sugere uma leve assimetria à direita, pois a cauda superior é mais alongada do que a inferior.
+
+
+
+
+
+
+
+
+      
+
+
+
+    ])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // + Determinie as assíntotas verticais da função $f(t) = sec(t)$.
 //   #solution([
